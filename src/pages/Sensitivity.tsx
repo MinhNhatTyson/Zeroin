@@ -1,20 +1,32 @@
 import { useState } from 'react'
 import { cm360, edpi, inches360, convertSens } from '../core/sensitivity'
+import { loadProfile, saveProfile } from '../storage/profile'
 
 export default function Sensitivity() {
-  const [dpi, setDpi] = useState(1600)
-  const [sens, setSens] = useState(0.3)
+  const [initial] = useState(loadProfile)
+  const [dpiText, setDpiText] = useState(String(initial.dpi))
+  const [sensText, setSensText] = useState(String(initial.valorantSens))
+  const dpi = Number(dpiText)
+  const sens = Number(sensText)
   const valid = dpi > 0 && sens > 0
+
+  const update = (nextDpi: string, nextSens: string) => {
+    setDpiText(nextDpi)
+    setSensText(nextSens)
+    const d = Number(nextDpi)
+    const s = Number(nextSens)
+    if (d > 0 && s > 0) saveProfile({ dpi: d, valorantSens: s })
+  }
 
   return (
     <div className="page">
       <h1>Sensitivity</h1>
       <div className="card row">
         <label>Mouse DPI
-          <input type="number" value={dpi} onChange={(e) => setDpi(Number(e.target.value))} />
+          <input type="number" value={dpiText} onChange={(e) => update(e.target.value, sensText)} />
         </label>
         <label>Valorant sensitivity
-          <input type="number" step="0.01" value={sens} onChange={(e) => setSens(Number(e.target.value))} />
+          <input type="number" step="0.01" value={sensText} onChange={(e) => update(dpiText, e.target.value)} />
         </label>
       </div>
       {valid && (
