@@ -22,6 +22,7 @@ export default function FlickDrillPage() {
   const [summary, setSummary] = useState<FlickSummary | null>(null)
 
   useEffect(() => {
+    const profile = loadProfile()
     const arena = createArena(canvasRef.current!, {
       sens: profile.valorantSens,
       onLockChange: (locked) => {
