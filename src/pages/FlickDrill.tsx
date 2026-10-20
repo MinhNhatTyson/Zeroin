@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom'
 import { createArena, type Arena } from '../scenes/arena'
 import { createFlickDrill, type FlickDrill, type Phase } from '../scenes/flickDrill'
 import { DEFAULT_FLICK, type FlickSummary } from '../core/flick'
+import { loadProfile } from '../storage/profile'
+import { recordFlick } from '../storage/sessions'
 
-const VALORANT_SENS = 0.3 // later this will come from the saved profile
 const fmtMs = (v: number) => `${Math.round(v)} ms`
+const profile = loadProfile()
 
 export default function FlickDrillPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -21,7 +23,7 @@ export default function FlickDrillPage() {
 
   useEffect(() => {
     const arena = createArena(canvasRef.current!, {
-      sens: VALORANT_SENS,
+      sens: profile.valorantSens,
       onLockChange: (locked) => {
         if (locked) drillRef.current?.start()
         else drillRef.current?.abort()
@@ -29,8 +31,11 @@ export default function FlickDrillPage() {
     })
 
     const drill = createFlickDrill(arena, DEFAULT_FLICK, {
-      onPhase: (p, s) => {
-        if (s) setSummary(s)
+      onPhase: (p, s, runShots) => {
+        if (s && runShots) {
+          setSummary(s)
+          recordFlick(DEFAULT_FLICK.durationMs, s, runShots, profile)
+        }
         setPhase(p)
       },
       // HUD is written straight to the DOM: no React re-render while playing.

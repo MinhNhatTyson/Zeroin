@@ -50,7 +50,7 @@ export function nextTarget(cfg: FlickConfig, rng: () => number, prev?: Vec3): Ve
 }
 
 const RAD = 180 / Math.PI
-const wrap180 = (d: number) => ((d + 540) % 360) - 180
+export const wrap180 = (d: number) => ((d + 540) % 360) - 180
 
 /** Yaw/pitch (degrees, same convention as Look) needed to point from `from` at `to`. */
 export function anglesTo(from: Vec3, to: Vec3): Look {

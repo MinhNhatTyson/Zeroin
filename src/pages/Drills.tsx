@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 const DRILLS: { name: string; blurb: string; to?: string }[] = [
   { name: 'Flick', blurb: 'One target at a time. Snap to it and click. Trains flick speed and accuracy.', to: '/drills/flick' },
-  { name: 'Tracking', blurb: 'Follow a strafing target. Trains smooth crosshair control.' },
+  { name: 'Tracking', blurb: 'Follow a strafing target. Trains smooth crosshair control.', to: '/drills/tracking' },
   { name: 'Target Switching', blurb: 'Several targets alive at once. Trains clean transitions.' },
 ]
 

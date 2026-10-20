@@ -17,7 +17,7 @@ export interface Hud {
 }
 
 export interface FlickCallbacks {
-  onPhase: (phase: Phase, summary?: FlickSummary) => void
+  onPhase: (phase: Phase, summary?: FlickSummary, shots?: Shot[]) => void
   onHud: (hud: Hud) => void
 }
 
@@ -48,9 +48,9 @@ export function createFlickDrill(arena: Arena, cfg: FlickConfig, cb: FlickCallba
   let lastHud = 0
   let current: Vec3 | undefined
 
-  const setPhase = (p: Phase, summary?: FlickSummary) => {
+  const setPhase = (p: Phase, summary?: FlickSummary, runShots?: Shot[]) => {
     phase = p
-    cb.onPhase(p, summary)
+    cb.onPhase(p, summary, runShots)
   }
 
   const emitHud = (now: number) => {
@@ -101,7 +101,7 @@ export function createFlickDrill(arena: Arena, cfg: FlickConfig, cb: FlickCallba
   const finish = () => {
     mesh.visible = false
     const summary = summarize(shots, cfg.durationMs)
-    setPhase('finished', summary) // set before exiting lock so abort() ignores it
+    setPhase('finished', summary, shots) // set before exiting lock so abort() ignores it
     emitHud(performance.now())
     arena.exitLock()
   }
